@@ -1,0 +1,131 @@
+# DECA
+set_global_assignment -name FAMILY "MAX 10"
+set_global_assignment -name DEVICE 10M50DAF484C6GES
+
+set_global_assignment -name NUM_PARALLEL_PROCESSORS ALL
+set_global_assignment -name DEVICE_FILTER_SPEED_GRADE 6
+set_global_assignment -name RESERVE_ALL_UNUSED_PINS_WEAK_PULLUP "AS INPUT TRI-STATED"
+
+# My personal preferences or patches 
+set_global_assignment -name VHDL_INPUT_VERSION VHDL_2008
+set_global_assignment -name VERILOG_INPUT_VERSION SYSTEMVERILOG_2005
+set_global_assignment -name ALLOW_ANY_RAM_SIZE_FOR_RECOGNITION ON
+set_global_assignment -name ADD_PASS_THROUGH_LOGIC_TO_INFERRED_RAMS OFF
+set_global_assignment -name USE_CONFIGURATION_DEVICE OFF
+set_global_assignment -name INTERNAL_FLASH_UPDATE_MODE "SINGLE COMP IMAGE WITH ERAM"
+set_global_assignment -name CRC_ERROR_OPEN_DRAIN OFF       
+
+# IO BANKS
+# Taken from TomVerberue on GitHub
+set_global_assignment -name IOBANK_VCCIO 2.5V -section_id 1A
+set_global_assignment -name IOBANK_VCCIO 2.5V -section_id 1B
+set_global_assignment -name IOBANK_VCCIO 2.5V -section_id 2
+set_global_assignment -name IOBANK_VCCIO 3.3V -section_id 3
+set_global_assignment -name IOBANK_VCCIO 3.3V -section_id 4
+set_global_assignment -name IOBANK_VCCIO 1.5V -section_id 5
+set_global_assignment -name IOBANK_VCCIO 1.5V -section_id 6
+set_global_assignment -name IOBANK_VCCIO 1.8V -section_id 7
+set_global_assignment -name IOBANK_VCCIO 1.2V -section_id 8
+set_global_assignment -name AUTO_RESTART_CONFIGURATION ON
+set_global_assignment -name ENABLE_CONFIGURATION_PINS OFF
+set_global_assignment -name ENABLE_BOOT_SEL_PIN OFF
+
+# CLOCKS
+set_location_assignment PIN_M8  -to deca_max10_clk1_50
+
+set_instance_assignment -name IO_STANDARD       "2.5 V" -to deca_max10_clk1_50
+
+# LEDS, BUTTONS, SWITCHES
+set_location_assignment PIN_C7  -to deca_led[0]
+set_location_assignment PIN_C8  -to deca_led[1]
+set_location_assignment PIN_A6  -to deca_led[2]
+set_location_assignment PIN_B7  -to deca_led[3]
+set_location_assignment PIN_C4  -to deca_led[4]
+set_location_assignment PIN_A5  -to deca_led[5]
+set_location_assignment PIN_B4  -to deca_led[6]
+set_location_assignment PIN_C5  -to deca_led[7]
+set_location_assignment PIN_H21 -to deca_key[0]
+set_location_assignment PIN_H22 -to deca_key[1]
+set_location_assignment PIN_J21 -to deca_sw[0]
+set_location_assignment PIN_J22 -to deca_sw[1]
+
+set_instance_assignment -name IO_STANDARD "1.2 V" -to deca_led[*]
+set_instance_assignment -name IO_STANDARD "1.5 V Schmitt Trigger" -to deca_key[*]
+set_instance_assignment -name IO_STANDARD "1.5 V Schmitt Trigger" -to deca_sw[*]
+
+# GPIO
+set_location_assignment PIN_W18  -to deca_gpio0[0] 
+set_location_assignment PIN_Y18  -to deca_gpio0[1] 
+set_location_assignment PIN_Y19  -to deca_gpio0[2] 
+set_location_assignment PIN_AA17 -to deca_gpio0[3] 
+set_location_assignment PIN_AA20 -to deca_gpio0[4] 
+set_location_assignment PIN_AA19 -to deca_gpio0[5] 
+set_location_assignment PIN_AB21 -to deca_gpio0[6] 
+set_location_assignment PIN_AB20 -to deca_gpio0[7] 
+set_location_assignment PIN_AB19 -to deca_gpio0[8] 
+set_location_assignment PIN_Y16  -to deca_gpio0[9] 
+set_location_assignment PIN_V16  -to deca_gpio0[10]
+set_location_assignment PIN_AB18 -to deca_gpio0[11]
+set_location_assignment PIN_V15  -to deca_gpio0[12]
+set_location_assignment PIN_W17  -to deca_gpio0[13]
+set_location_assignment PIN_AB17 -to deca_gpio0[14]
+set_location_assignment PIN_AA16 -to deca_gpio0[15]
+set_location_assignment PIN_AB16 -to deca_gpio0[16]
+set_location_assignment PIN_W16  -to deca_gpio0[17]
+set_location_assignment PIN_AB15 -to deca_gpio0[18]
+set_location_assignment PIN_W15  -to deca_gpio0[19]
+set_location_assignment PIN_Y14  -to deca_gpio0[20]
+set_location_assignment PIN_AA15 -to deca_gpio0[21]
+set_location_assignment PIN_AB14 -to deca_gpio0[22]
+set_location_assignment PIN_AA14 -to deca_gpio0[23]
+set_location_assignment PIN_AB13 -to deca_gpio0[24]
+set_location_assignment PIN_AA13 -to deca_gpio0[25]
+set_location_assignment PIN_AB12 -to deca_gpio0[26]
+set_location_assignment PIN_AA12 -to deca_gpio0[27]
+set_location_assignment PIN_AB11 -to deca_gpio0[28]
+set_location_assignment PIN_AA11 -to deca_gpio0[29]
+set_location_assignment PIN_AB10 -to deca_gpio0[30]
+set_location_assignment PIN_Y13  -to deca_gpio0[31]
+set_location_assignment PIN_Y11  -to deca_gpio0[32]
+set_location_assignment PIN_W13  -to deca_gpio0[33]
+set_location_assignment PIN_W12  -to deca_gpio0[34]
+set_location_assignment PIN_W11  -to deca_gpio0[35]
+set_location_assignment PIN_V12  -to deca_gpio0[36]
+set_location_assignment PIN_V11  -to deca_gpio0[37]
+set_location_assignment PIN_V13  -to deca_gpio0[38]
+set_location_assignment PIN_V14  -to deca_gpio0[39]
+set_location_assignment PIN_Y17  -to deca_gpio0[40]
+set_location_assignment PIN_W14  -to deca_gpio0[41]
+set_location_assignment PIN_U15  -to deca_gpio0[42]
+set_location_assignment PIN_R13  -to deca_gpio0[43]
+
+set_location_assignment PIN_Y5  -to deca_gpio1[0] 
+set_location_assignment PIN_Y6  -to deca_gpio1[1] 
+set_location_assignment PIN_W6  -to deca_gpio1[2] 
+set_location_assignment PIN_W7  -to deca_gpio1[3] 
+set_location_assignment PIN_W8  -to deca_gpio1[4] 
+set_location_assignment PIN_V8  -to deca_gpio1[5] 
+set_location_assignment PIN_AB8 -to deca_gpio1[6] 
+set_location_assignment PIN_V7  -to deca_gpio1[7] 
+set_location_assignment PIN_R11 -to deca_gpio1[8] 
+set_location_assignment PIN_AB7 -to deca_gpio1[9] 
+set_location_assignment PIN_AB6 -to deca_gpio1[10]
+set_location_assignment PIN_AA7 -to deca_gpio1[11]
+set_location_assignment PIN_AA6 -to deca_gpio1[12]
+set_location_assignment PIN_Y7  -to deca_gpio1[13]
+set_location_assignment PIN_V10 -to deca_gpio1[14]
+set_location_assignment PIN_U7  -to deca_gpio1[15]
+set_location_assignment PIN_W9  -to deca_gpio1[16]
+set_location_assignment PIN_W5  -to deca_gpio1[17]
+set_location_assignment PIN_R9  -to deca_gpio1[18]
+set_location_assignment PIN_W4  -to deca_gpio1[19]
+set_location_assignment PIN_P9  -to deca_gpio1[20]
+set_location_assignment PIN_V17 -to deca_gpio1[21]
+set_location_assignment PIN_W3  -to deca_gpio1[22]
+set_location_assignment PIN_AA2 -to deca_gpio1[23]
+set_location_assignment PIN_U6  -to deca_gpio1[24]
+
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to deca_gpio0[*]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to deca_gpio1[*]
+
+#set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to deca_gpio0[*]
