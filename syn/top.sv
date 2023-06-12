@@ -26,9 +26,9 @@ module top (
     reg       matrix_oe_n;
     reg       matrix_stb;
 
-    reg debug_frame_sync;
-    reg debug_line_sync;
-    reg debug_image_sync;
+    reg uart_tx, uart_rx;
+    reg uart_valid, uart_ready;
+    reg [7:0] uart_data;
 
     assign clk = deca_max10_clk1_50;
 
@@ -39,50 +39,35 @@ module top (
         .rst_n (rst_n)
     );
 
-    reg [31:0] cnt;
-    always_ff @(posedge clk or negedge rst_n) begin
-        if(!rst_n) begin
-            valid_in <= 1'b0;
-            sync_in <= 1'b0;
-            cnt <= '0;
-            rgb_in <= '0;
-        end
-        else begin
-            sync_in <= 1'b0;
-            if(cnt < 4096) begin
-                cnt <= cnt + 1'b1;
-                valid_in <= 1'b1;
-                if(cnt < 16)
-                    rgb_in <= {8'h00, 4'(cnt)};
-                else if(cnt == 31 || cnt == 32)
-                    rgb_in <= 12'h080;
-                else if(cnt >= 56 & cnt < 64)
-                    rgb_in <= 12'hF00;
-                else if(cnt >= 4096-64 & cnt < 4096)
-                    rgb_in <= 12'hFFF;
-                else
-                    rgb_in <= '0;
-            end
-            else begin
-                rgb_in <= '0;
-                valid_in <= 1'b0;
-            end
-        end
-    end
-
-
     led_matrix_top #(
         .PANEL_ROWS(64),
         .PANEL_COLS(64),
         .COLOR_DEPTH(4)
     )
     u_led_matrix_top (
-        .*, .prescale('d3)
+        .*, .prescale('d1)
     );
 
-    reg uart_tx, uart_rx;
-    reg uart_valid, uart_ready;
-    reg [7:0] uart_data;
+    reg [2:0] cnt;
+
+    assign sync_in = 1'b0;
+    assign uart_ready = 1'b1;
+
+    always_ff @(posedge clk or negedge rst_n) begin
+        if(!rst_n) begin
+            cnt <= '0;
+            rgb_in <= '0;
+            valid_in <= 1'b0;
+        end
+        else begin
+            valid_in <= (uart_valid & (cnt == 'd2));
+            if(uart_valid) begin
+                cnt <= (cnt == 'd2) ? '0 : cnt + 1'b1;
+                rgb_in[cnt * 4 +: 4] <= uart_data[7:4];
+            end
+        end
+    end
+
 
     uart #(
         .UART_CLKRATE_KHZ(50000),
@@ -91,9 +76,9 @@ module top (
     ) u_uart (
         .clk     (clk),
         .rst_n   (rst_n),
-        .tx_valid(uart_valid),
-        .tx_ready(uart_ready),
-        .tx_data (uart_data),
+        .tx_valid(1'b0),
+        .tx_ready(),
+        .tx_data (),
         .rx_valid(uart_valid),
         .rx_ready(uart_ready),
         .rx_data (uart_data),
@@ -101,7 +86,19 @@ module top (
         .uart_rx (uart_rx)
     );
 
-    assign deca_led = '1;
+    reg [7:0] z;
+    always_ff @(posedge clk or negedge rst_n) begin
+        if(!rst_n) begin
+            z <= '1;
+        end
+        else begin
+            if(uart_valid & uart_ready) begin
+                z <= ~uart_data;
+            end
+        end
+    end
+
+    assign deca_led = z;
 
     assign deca_gpio0[0] = matrix_clk;
 
