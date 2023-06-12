@@ -71,7 +71,7 @@ module tb;
     ) dut (.*);
 
     initial begin
-        repeat(50000) @(posedge clk);
+        repeat(500000) @(posedge clk);
         $finish;
     end
 

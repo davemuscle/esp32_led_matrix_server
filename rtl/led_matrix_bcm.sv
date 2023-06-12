@@ -18,10 +18,11 @@ reg [COLOR_DEPTH-1:0] bcm_count;
 reg [COLOR_DEPTH-1:0] bcm_count_rev;
 reg [COLOR_DEPTH-1:0] bcm_tick;
 reg [COLOR_DEPTH-1:0] bcm_tick_rev;
+reg [COLOR_DEPTH-1:0] bcm_tick_out;
 
 always_ff @(posedge clk or negedge rst_n) begin
     if(!rst_n) begin
-        bcm_count <= '0;
+        bcm_count <= 'd1;
     end
     else begin
         if(frame_sync)
@@ -38,13 +39,15 @@ always_comb begin
     end
 end
 
+assign bcm_tick_out = bcm_tick == '0 ? '{COLOR_DEPTH-1: 1'b1, default: 1'b0} : bcm_tick;
+
 always_comb begin
     for(int i = 0; i < 3; i++) begin
-        matrix_rgb_upper[i] = |(bcm_tick & frame_rgb_upper[i*COLOR_DEPTH +: COLOR_DEPTH]);
-        matrix_rgb_lower[i] = |(bcm_tick & frame_rgb_lower[i*COLOR_DEPTH +: COLOR_DEPTH]);
+        matrix_rgb_upper[i] = |(bcm_tick_out & frame_rgb_upper[i*COLOR_DEPTH +: COLOR_DEPTH]);
+        matrix_rgb_lower[i] = |(bcm_tick_out & frame_rgb_lower[i*COLOR_DEPTH +: COLOR_DEPTH]);
     end
 end
 
-assign image_sync = frame_sync & (bcm_count == '1);
+assign image_sync = frame_sync & (bcm_count == '0);
 
 endmodule

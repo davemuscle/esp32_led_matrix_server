@@ -1,6 +1,7 @@
 
 module led_matrix_driver #(
-    parameter PANEL_COLS = 0
+    parameter PANEL_COLS    = 0,
+    parameter OUTPUT_CYCLES = 5
 )(
 
     input clk,
@@ -23,11 +24,12 @@ typedef enum {
 
 state_t state, state_next;
 
-reg                          clock_done;
-reg                          clock_toggle;
-reg                          enable;
-reg [$clog2(PANEL_COLS)-1:0] column;
-reg                          column_enable;
+reg                             clock_done;
+reg                             clock_toggle;
+reg                             enable;
+reg [$clog2(PANEL_COLS)-1:0]    column;
+reg                             column_enable;
+reg [$clog2(OUTPUT_CYCLES)-1:0] oe_cycles;
 
 //--------------------------------------------------------------------------------------------------
 // Enable
@@ -125,8 +127,22 @@ assign line_sync = state == SWITCH & state_next != SWITCH;
 // Panel Outputs
 //--------------------------------------------------------------------------------------------------
 
+always_ff @(posedge clk or negedge rst_n) begin
+    if(!rst_n) begin
+        oe_cycles <= '0;
+    end
+    else begin
+        if(state != CLOCK) begin
+            oe_cycles <= '0;
+        end
+        else if(enable & (state == CLOCK) & !clock_toggle & (oe_cycles != $clog2(OUTPUT_CYCLES)'(OUTPUT_CYCLES-1))) begin
+            oe_cycles <= oe_cycles + 1'b1;
+        end
+    end
+end
+
 assign matrix_clk  = (prescaler_bypass ? !clk : clock_toggle) & state == CLOCK;
-assign matrix_oe_n = state == RESET | state == LATCH | state == DELAY1 | state == SWITCH | state == DELAY2;
+assign matrix_oe_n = !(state == CLOCK & (oe_cycles < OUTPUT_CYCLES-1));
 assign matrix_stb  = state == LATCH;
 
 endmodule
