@@ -15,7 +15,6 @@ void setup() {
     Serial.begin(115200);
     while (!Serial);
 
-
     // Debugging power-up display issues:
     pinMode(LM_CLK, OUTPUT);
     pinMode(LM_LAT, OUTPUT);
@@ -24,14 +23,21 @@ void setup() {
     digitalWrite(LM_LAT, 0);
     digitalWrite(LM_OE,  1);
     delay(100);
-    for(int i = 0; i < 64; i++) {
-        digitalWrite(LM_CLK, 1);
-        digitalWrite(LM_CLK, 0);
+    for(int i = 0; i < DISPLAY_HEIGHT; i++) {
+        for(int j = 0; j < DISPLAY_WIDTH; j++){
+            digitalWrite(LM_CLK, 1);
+            delay(1);
+            digitalWrite(LM_CLK, 0);
+            delay(1);
+        }
+        digitalWrite(LM_LAT, 1);
+        delay(10);
+        digitalWrite(LM_LAT, 0);
+        delay(10);
     }
-    delay(100);
 
     // LED Matrix
-    HUB75_I2S_CFG mxconfig (64, 64, 1, _pins);
+    HUB75_I2S_CFG mxconfig (DISPLAY_HEIGHT, DISPLAY_WIDTH, 1, _pins);
     mxconfig.double_buff = true;
     //mxconfig.clkphase = false;
     ledmatrix = new MatrixPanel_I2S_DMA(mxconfig);
@@ -88,6 +94,10 @@ void setup() {
     ledmatrix->flipDMABuffer();
     if (WiFi.scanComplete() == -2) WiFi.scanNetworks(true);
 
+    // MDNS
+    if(MDNS.begin("esp32")){
+        Serial.println("mDNS set to esp32.local");
+    }
 
     // add delay for IP display
     delay(1000);
@@ -110,6 +120,9 @@ void setup() {
         0
     );
 
+    // Add MDNS service
+    MDNS.addService("http", "tcp", 80);
+
 }
 
 void task_server (void *pvParameters){
@@ -122,13 +135,13 @@ void task_server (void *pvParameters){
 }
 
 bool restart = true;
+int total_gif_time;
 index_t item;
 
 void loop() {
 
     int flag;
     String name;
-    bool draw = false;
     File file;
 
     fsmutex.lock();
@@ -167,28 +180,26 @@ void loop() {
         } else {
             Serial.println("Failed to open!");
         }
-        draw = true;
-    } else if(name.endsWith(".bmp") || name.endsWith(".jpg")){
+        delay(BMP_MS);
+    } else if(name.endsWith(".bmp")){
         Serial.println("Displaying image from file: " + name);
         memset(img_buff, 0, IMG_BUFF_SIZE);
-        if((name.endsWith(".bmp") && get_bmp(name)) ||
-           (name.endsWith(".jpg") && get_jpg(name))) {
-            draw = true;
-        } else {
-            Serial.println("Failed to open!");
-        }
-        if(draw){
+        if((name.endsWith(".bmp") && get_bmp(name))){
             for(int j = 0; j < DISPLAY_HEIGHT; j++) {
                 for(int i = 0; i < DISPLAY_WIDTH; i++) {
                     ledmatrix->drawPixel(i,j, img_buff[j][i]);
                 }
             }
             ledmatrix->flipDMABuffer();
+            delay(BMP_MS);
+        } else {
+            Serial.println("Failed to open!");
         }
     } else if(name.endsWith(".gif")){
         Serial.println("Displaying gif from file: " + name);
+        total_gif_time = 0;
         memset(img_buff, 0, IMG_BUFF_SIZE);
-        for(int i = 0; i < IMG_LOOPS; i++){
+        for(int i = 0; i < GIF_LOOPS; i++){
             if(gif.open(name.c_str(), GIFOpenFile, GIFCloseFile, GIFReadFile, GIFSeekFile, GIFDraw)){
                 gif_vx = 0;
                 gif_vy = 0;
@@ -206,23 +217,20 @@ void loop() {
                         }
                     }
                     ledmatrix->flipDMABuffer();
+                    total_gif_time += fd;
+                    if(total_gif_time >= GIF_MS) break;
                 }
                 gif.close();
             } else {
                 Serial.println("Failed to open!");
+                break;
             }
+            if(total_gif_time >= GIF_MS) break;
         }
     }
-
-    if(draw) delay(IMG_DELAY);
-
 }
-
 
 // TODO:
 /*
 Implement move up/down feature for webserver
-Use chunked response for html page
 */
-
-

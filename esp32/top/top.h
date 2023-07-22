@@ -4,19 +4,19 @@
 #include <FS.h>
 #include <SD.h>
 #include <SPI.h>
-
 #include <ESP32-HUB75-MatrixPanel-I2S-DMA.h>
-#include <JPEGDEC.h>
-
 #include <AnimatedGIF.h>
+#include <ESPmDNS.h>
 
 #include "html_static.h"
 
-#define IMG_LOOPS 5
-#define IMG_DELAY 5000
+#define GIF_MS 10000
+#define GIF_LOOPS 5
+
+#define BMP_MS 5000
 
 #define INDEX_FILE "/index.bin"
-#define INDEX_ENTRIES 8
+#define INDEX_ENTRIES 1024
 
 using namespace std;
 

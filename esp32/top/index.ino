@@ -56,7 +56,7 @@ void init_index (){
         while(file){
             String name = String(file.name());
             Serial.println("Checking on SD card file: " + name);
-            if(name.endsWith(".jpg") || name.endsWith(".gif") || name.endsWith(".txt") || name.endsWith(".bmp")){
+            if(name.endsWith(".gif") || name.endsWith(".txt") || name.endsWith(".bmp")){
                 if(find_index(file.name(), &dummy) == -1){
                     add_index(file.name(), file.size());
                 }

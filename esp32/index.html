@@ -1,0 +1,67 @@
+<html>
+    <head>
+        <title>ESP32</title>
+        <link rel="stylesheet" href="style.css">
+        <style>
+        body {
+            background-color: #E6E6FA
+        }
+        table, th, td {
+            border: thin solid black;
+            text-align: left;
+        }
+        th, td {
+            padding: 10px;
+        }
+        </style>
+    </head>
+    <body>
+        <h1>ESP32 LED Matrix Fileserver</h1>
+        <h2>Upload</h2>
+        <p>Choose a 64x64 bitmap (.bmp), gif (.gif), or small text file (.txt)</p>
+        <form method="post" action= '/upload' enctype="multipart/form-data">
+            <input type="file" id="image" name="image" accept=".txt, .bmp, .gif"/><br><br>
+            <input type="submit" value="Upload">
+        </form>
+        <!--
+        <h2>Reset</h2>
+        <form action='/reset'>
+            <button name"button" value"reset">Reset</button>
+        </form>
+        <form action='/debug'>
+            <button name"button" value"debug">Debug</button>
+        </form>
+        -->
+        <h2>Browse</h2>
+        <table>
+            <tr>
+                <th>Index</th>
+                <th>File</th>
+                <th>Size</th>
+                <th>Delete</th>
+            </tr>
+        <!--PARSE_PATTERN-->
+            <tr>
+                <td>0</td>
+                <td>test.jpg</td>
+                <td>test</td>
+                <td>
+                    <form method="post" action='/delete' enctype="multipart/form-data">
+                        <button name="button" value="test">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>test.jpg</td>
+                <td>test</td>
+                <td>
+                    <form method="post" action= '/delete' enctype="multipart/form-data">
+                        <input type="submit" value="Test">Delete</input>
+                    </form>
+                </td>
+            </tr>
+        </table>
+    </body>
+</html>
+
