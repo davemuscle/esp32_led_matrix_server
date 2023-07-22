@@ -2,14 +2,14 @@
 
 Upload images, gifs, and text files for display on an LED matrix!
 
-| ![cat.jpg](doc/esp32/cat.jpg) |
+| ![cat.jpg](esp32/doc/cat.jpg) |
 | :--: |
 | *Cat* |
 
 The board consists of an ESP32 microcontroller and an SD card.
 The SD card can be accessed remotely through a web browser, after some setup is complete.
 
-| ![board.jpg](doc/esp32/board.jpg) |
+| ![board.jpg](esp32/doc/board.jpg) |
 | :--: |
 | *ESP32 Board* |
 
@@ -20,13 +20,13 @@ The SD card can be accessed remotely through a web browser, after some setup is 
 Remove the microSD card from the ESP32 board and insert it into a disk reader on your PC. 
 Create a file called "credentials.h", or open it if it already exists.
 
-| ![sd.jpg](doc/esp32/sd.jpg) |
+| ![sd.jpg](esp32/doc/sd.jpg) |
 | :--: |
 | *Mounted SD card* |
 
 Open the file in a text editor and input your network SSID and password on consecutive lines.
 
-| ![creds.jpg](doc/esp32/creds.jpg) |
+| ![creds.jpg](esp32/doc/creds.jpg) |
 | :--: |
 | *Credentials* |
 
@@ -37,7 +37,7 @@ Place the SD card back into the ESP32 board.
 Plug the onboard barrel-jack into a 5V DC power supply.
 Anything at or above 5V-1A will work:
 
-| ![ps.jpg](doc/esp32/ps.jpg) |
+| ![ps.jpg](esp32/doc/ps.jpg) |
 | :--: |
 | *Example Power Supply* |
 
@@ -46,14 +46,14 @@ Anything at or above 5V-1A will work:
 After plugging in the board with the network credentials loaded, the ESP32 will connect to your home network.
 The IP address of the ESP32 will be displayed on the LED matrix, like this:
 
-| ![ip.jpg](doc/esp32/ip.jpg) |
+| ![ip.jpg](esp32/doc/ip.jpg) |
 | :--: |
 | *Displayed IP* |
 
 Note:
 If the IP address is displayed is shifted and blurry, reapply power to the board or press the reset button.
 
-| ![err.jpg](doc/esp32/err.jpg) |
+| ![err.jpg](esp32/doc/err.jpg) |
 | :--: |
 | *Screen malfunction, reset!* |
 
@@ -73,7 +73,7 @@ If that doesn't work, you need install an mDNS service like Bonjour (Windows)
 
 If the previous steps worked, you'll be able to access the fileserver:
 
-| ![server.jpg](doc/esp32/server.jpg) |
+| ![server.jpg](esp32/doc/server.jpg) |
 | :--: |
 | *File Server* |
 
@@ -83,7 +83,7 @@ The accepted file formats are:
 * .bmp
 * .gif
 
-| ![filter.jpg](doc/esp32/filter.jpg) |
+| ![filter.jpg](esp32/doc/filter.jpg) |
 | :--: |
 | *Telepathy* |
 
